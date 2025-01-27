@@ -30,7 +30,11 @@ namespace BlogWebApp.Areas.Admin.Controllers
         [HttpGet("Login")]
         public IActionResult Login()
         {
-            return View(new LoginVm());
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return View(new LoginVm());
+            }
+            return RedirectToAction("Index","User",new {area="Admin"});
         }
 
         public UserManager<ApplicationUser> Get_userManager()
@@ -60,6 +64,14 @@ namespace BlogWebApp.Areas.Admin.Controllers
             await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, vm.RememberedMe, true);
             _notification.Success("Login Successful");
             return RedirectToAction("Index", "User", new { area = "Admin" });
+        }
+
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            _signInManager.SignOutAsync();
+            _notification.Success("Logout Successful");
+            return RedirectToAction("Index", "Home", new {area=""});
         }
     }
 }
