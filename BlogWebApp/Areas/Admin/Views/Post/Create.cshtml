@@ -1,0 +1,56 @@
+﻿@model BlogWebApp.ViewModels.CreatePostVm
+@{
+    ViewData["Title"] = "Create Post";
+}
+
+
+
+
+<div class="container-fluid">
+    <a asp-controller="Post" asp-action="Index" class="btn btn-primary rounded-3 mb-1 ">Back</a>
+    
+
+    <div class="card">
+        <div class="card-header bg-primary">
+            <h4 class="card-title text-white">New Post</h4>
+        </div>
+        <div class="card-body">
+            <form asp-controller="User" asp-action="Register" asp-area="Admin" method="post">
+               <div class="row mb-2">
+                    <div class="col-9">
+                        <div class="mb-2">
+                            <label>Title</label>
+                            <input type="text" asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Short Description</label>
+                            <input type="text" asp-for="ShortDescription" class="form-control" />
+                            <span asp-validation-for="ShortDescription" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Description</label>
+                            <textarea asp-for="Description" class="form-control"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="mb-2">
+                            <img src="~/Thumbnail/thumbnail1.jpg" alt="Alternate Text" class="img-fluid" />
+                        </div>
+                       
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Thumbnail</label>
+                            <input type="file" class="custom-file" asp-for="Thumbnail">
+                            <span asp-validation-for="Thumbnail" class="text-danger"></span>
+                        </div>
+                    </div>
+               </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary rounded-3 w-100">Save</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
