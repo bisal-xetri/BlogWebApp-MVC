@@ -1,5 +1,5 @@
-﻿@using Microsoft.AspNetCore.Identity
-@model BlogWebApp.Models.ApplicationUser
+﻿@using Microsoft.AspNetCore.Identity;
+
 @inject UserManager<ApplicationUser> _userManager;
 @{
     var LoggedInUser = new ApplicationUser();
@@ -24,6 +24,7 @@
 
     <!-- Custom styles for this template-->
     <link href="~/dashboard/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css" rel="stylesheet">
 </head>
 
 <body id="page-top">
@@ -167,6 +168,12 @@
     <!-- Page level custom scripts -->
     <script src="~/dashboard/js/demo/chart-area-demo.js"></script>
     <script src="~/dashboard/js/demo/chart-pie-demo.js"></script>
+    <script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
+    <script>
+        $(document).ready( function () {
+            $('#myTable').DataTable();
+        } );
+    </script>
     @await Component.InvokeAsync("Notyf")
     @await RenderSectionAsync("Scripts", required: false)
 </body>
