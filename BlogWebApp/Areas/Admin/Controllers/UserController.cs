@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.ComponentModel;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 namespace BlogWebApp.Areas.Admin.Controllers
@@ -34,16 +36,71 @@ namespace BlogWebApp.Areas.Admin.Controllers
                 Id = x.Id,
                 FirstName=x.FirstName,
                 LastName=x.LastName,
-                UserName = x.UserName
+                UserName = x.UserName,
+                Email = x.Email,
+
             }).ToList();
+            foreach(var user in vm)
+            {
+                var singleUser = await _userManager.FindByIdAsync(user.Id);
+                var role = await _userManager.GetRolesAsync(singleUser);
+                user.Roles = role.FirstOrDefault();
+            }
             
             return View(vm);
         }
+        //reset password
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> ResetPassword(string id)
+        {
+            var exitingUsser = await _userManager.FindByIdAsync(id);
+            if(exitingUsser == null)
+            {
+                _notification.Error("User Dosenot Exits.");
+                return View();
+            }
+            var vm = new ResetPasword()
+            {
+                Id = exitingUsser.Id,
+                UserName = exitingUsser.UserName
+
+            };
+            return View(vm);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasword vm)
+        {
+            if (!ModelState.IsValid)
+            {
+              
+                return View(vm);
+            }
+           
+            var exitingUser = await _userManager.FindByIdAsync(vm.Id);
+            if(exitingUser == null)
+            {
+                _notification.Error("User Dosenot Exits");
+                return View(vm);
+            }
+            var token = await _userManager.GeneratePasswordResetTokenAsync(exitingUser);
+            var result=await _userManager.ResetPasswordAsync(exitingUser,token, vm.NewPassword);
+            if (result.Succeeded)
+            {
+                _notification.Success("Password Reset Successful");
+                return RedirectToAction(nameof(Index));
+            }
+           return View(vm);
+
+        }
+
         [Authorize(Roles="Admin")]
         [HttpGet]
         public  IActionResult Register()
         {
-            return View(new RegisterVm());
+            return View();
         }
 
         [Authorize(Roles = "Admin")]
