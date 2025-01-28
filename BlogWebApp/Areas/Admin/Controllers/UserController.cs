@@ -153,7 +153,7 @@ namespace BlogWebApp.Areas.Admin.Controllers
             {
                 return View(new LoginVm());
             }
-            return RedirectToAction("Index","User",new {area="Admin"});
+            return RedirectToAction("Index","Post",new {area="Admin"});
         }
 
         public UserManager<ApplicationUser> Get_userManager()
@@ -182,15 +182,22 @@ namespace BlogWebApp.Areas.Admin.Controllers
             }
             await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, vm.RememberedMe, true);
             _notification.Success("Login Successful");
-            return RedirectToAction("Index", "User", new { area = "Admin" });
+            return RedirectToAction("Index", "Post", new { area = "Admin" });
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Logout()
         {
             _signInManager.SignOutAsync();
             _notification.Success("Logout Successful");
             return RedirectToAction("Index", "Home", new {area=""});
+        }
+        [HttpGet("AccessDenied")]
+        [Authorize]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }
