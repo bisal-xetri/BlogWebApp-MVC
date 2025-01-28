@@ -1,10 +1,12 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using BlogWebApp.Models;
+using BlogWebApp.Utilities;
 using BlogWebApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace BlogWebApp.Areas.Admin.Controllers
@@ -35,6 +37,55 @@ namespace BlogWebApp.Areas.Admin.Controllers
                 UserName = x.UserName
             }).ToList();
             
+            return View(vm);
+        }
+        [Authorize(Roles="Admin")]
+        [HttpGet]
+        public  IActionResult Register()
+        {
+            return View(new RegisterVm());
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterVm vm)
+        {
+            if (!ModelState.IsValid)
+            {
+               return View(vm);
+            }
+            var checkUserByEmail=await _userManager.FindByEmailAsync(vm.Email);
+            if (checkUserByEmail!=null)
+            {
+                _notification.Error("Email Already Exits.");
+                return View(vm);
+            }
+            var checkUserByUserName= await _userManager.FindByNameAsync(vm.UserName);
+            if (checkUserByUserName!=null)
+            {
+                _notification.Error("UserName Already Exits.");
+                return View(vm);
+            }
+            var user = new ApplicationUser()
+            {
+                Email = vm.Email,
+                UserName = vm.UserName,
+                FirstName = vm.FirstName,
+                LastName = vm.LastName,
+            };
+           var checkUser= await _userManager.CreateAsync(user,vm.Password);
+            if (checkUser.Succeeded) {
+                if (vm.IsAdmin)
+                {
+                    await _userManager.AddToRoleAsync(user, WebSiteRoles.WebsiteAdmin);
+                }
+                else
+                {
+                    await _userManager.AddToRoleAsync(user, WebSiteRoles.WebsiteAuthor);
+                }
+                _notification.Success("User Register Successfully");
+               return RedirectToAction("Index", "User", new {area="Admin"});
+            }
             return View(vm);
         }
 
