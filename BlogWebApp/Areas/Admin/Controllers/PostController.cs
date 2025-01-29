@@ -57,7 +57,6 @@ namespace BlogWebApp.Areas.Admin.Controllers
             return View(listOfPostVm);
         }
 
-
         [HttpGet]
         public IActionResult Create()
         {
@@ -97,22 +96,88 @@ namespace BlogWebApp.Areas.Admin.Controllers
             _notification.Success("Post Created Successfully");
             return RedirectToAction("Index");
         }
+
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var post= await _context.Posts.FirstOrDefaultAsync(x=>x.Id==id);
+            var post = await _context.Posts.FirstOrDefaultAsync(x => x.Id == id);
             var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
             var loggedInUserRole = await _userManager.GetRolesAsync(loggedInUser!);
-            if (loggedInUserRole[0] == WebSiteRoles.WebsiteAdmin || loggedInUser!.Id==post!.ApplicationUserId)
+
+            if (loggedInUserRole[0] == WebSiteRoles.WebsiteAdmin && loggedInUser!.Id == post!.ApplicationUserId)
             {
-               _context.Posts.Remove(post!);
+                _context.Posts.Remove(post!);
                 await _context.SaveChangesAsync();
-                _notification.Success("Post Delete Successfully");
+                _notification.Success("Post Deleted Successfully");
                 return RedirectToAction("Index", "Post", new { area = "Admin" });
             }
-            return View();
 
+            _notification.Error("You do not have permission to delete this post.");
+            return RedirectToAction("Index", "Post", new { area = "Admin" });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var post = await _context.Posts.FirstOrDefaultAsync(x => x.Id == id);
+            if (post == null)
+            {
+                _notification.Error("Post not found.");
+                return RedirectToAction("Index");
+            }
+            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
+            var loggedInUserRole = await _userManager.GetRolesAsync(loggedInUser!);
+
+            if (loggedInUserRole[0] != WebSiteRoles.WebsiteAdmin || loggedInUser!.Id!= post.ApplicationUserId)
+            {
+                _notification.Error("You are Not Authorize.");
+                return RedirectToAction("Index");
+            }
+            var vm = new CreatePostVm()
+            {
+                Id = post.Id,
+                Title = post.Title,
+                ShortDescription = post.ShortDescription,
+                ApplicationUserId = post.ApplicationUserId,
+                Description = post.Description,
+                ThumbnailUrl = post.ThumbnailUrl,
+                CreatedDate = (DateTime)post.CreatedDate
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(CreatePostVm vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+
+            var post = await _context.Posts.FirstOrDefaultAsync(x => x.Id == vm.Id);
+            if (post == null)
+            {
+                _notification.Error("Post not found.");
+                return View(vm);
+            }
+            post.Id = vm.Id;
+            post.Title = vm.Title;
+            post.Description = vm.Description;
+            post.ShortDescription = vm.ShortDescription;
+          
+
+            if (vm.Thumbnail != null)
+            {
+                post.ThumbnailUrl = UploadImage(vm.Thumbnail);
+            }
+
+            _context.Posts.Update(post);
+            await _context.SaveChangesAsync();
+            _notification.Success("Post Updated Successfully.");
+            return RedirectToAction("Index");
+        }
+
         private string UploadImage(IFormFile file)
         {
             string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
@@ -126,6 +191,5 @@ namespace BlogWebApp.Areas.Admin.Controllers
 
             return uniqueFileName;
         }
-
     }
 }

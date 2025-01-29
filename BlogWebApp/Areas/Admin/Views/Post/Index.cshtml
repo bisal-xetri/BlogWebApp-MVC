@@ -32,7 +32,7 @@
                             <div class="col-5 text-right d-flex justify-content-center flex-column">
                                 <h5 style="font-size:1rem" class="card-title">@post.AuthorName</h5>
                                 <p>
-                                    <a href="#" class="btn btn-primary rounded-3">Edit</a>
+                                    <a  class="btn btn-primary rounded-3" asp-action="Edit" asp-controller="Post" asp-area="Admin" asp-route-id="@post.Id">Edit</a>
                                     <form asp-action="Delete" asp-controller="Post" asp-area="Admin" method="post" onsubmit="return confirm('Do You want to delete this post?')" asp-route-id="@post.Id">
                                         <button type="submit" class="btn btn-danger rounded-3">Delete</button>
                                     </form>
