@@ -1,10 +1,12 @@
-﻿using BlogWebApp.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using BlogWebApp.Models;
 
 namespace BlogWebApp.ViewModels
 {
     public class CreatePostVm
     {
         public int Id { get; set; }
+        [Required]
         public string? Title { get; set; }
         public string? ShortDescription { get; set; }
         //Relation
