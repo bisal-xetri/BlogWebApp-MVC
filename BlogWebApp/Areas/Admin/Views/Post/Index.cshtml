@@ -1,4 +1,4 @@
-﻿
+﻿@model List<BlogWebApp.ViewModels.PostVM>
 @{
     ViewData["Title"] = "List Of Posts";
 }
@@ -10,7 +10,37 @@
             <h4 class="card-title text-white">List of Posts</h4>
         </div>
         <div class="card-body">
-          
+            @foreach(var post in Model){
+                <div class="card mb-3 p-2" >
+                    
+                    <div class="card-body">
+                     <div class="row">
+                            <div class="col-2 d-flex justify-content-center flex-column">
+                                @if(post.ThumbnailUrl==null){
+                                    <img class="img-fluid rounde" src="~/Thumbnail/thumbnail1.jpg" alt="@post.Title" />
+                                }
+                                else{
+                                     <img class="img-fluid rounde" src="~/Thumbnail/@post.ThumbnailUrl" alt="@post.Title" />
+                            
+                                }
+                            </div>
+                               
+                         <div class="col-5 d-flex justify-content-center flex-column">
+                                <h5 class="card-title text-primary">@post.Title</h5>
+                                <p style="font-size:.8rem">@post.CreatedDate</p>
+                         </div>
+                            <div class="col-5 text-right d-flex justify-content-center flex-column">
+                                <h5 style="font-size:1rem" class="card-title">@post.AuthorName</h5>
+                                <p>
+                                    <a href="#" class="btn btn-primary rounded-3">Edit</a>
+                                    <a href="#" class="btn btn-danger rounded-3">Delete</a>
+                                </p>
+                            </div>
+                     </div>
+                    </div>
+                </div>
+            }
+         
         </div>
     </div>
 </div>
