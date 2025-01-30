@@ -16,28 +16,28 @@
                     <div class="card-body">
                      <div class="row">
                             <div class="col-2 d-flex justify-content-center flex-column">
-                                @if(post.ThumbnailUrl==null){
-                                    <img class="img-fluid rounde" src="~/Thumbnail/thumbnail1.jpg" alt="@post.Title" />
+                                @if(post.ThumbnailUrl==null){ 
+                                    <img class="img-fluid rounded-3" src="~/Thumbnail/thumbnail1.jpg" alt="@post.Title" style="object-fit:cover; height:100%; width:100%" />
                                 }
                                 else{
-                                     <img class="img-fluid rounde" src="~/Thumbnail/@post.ThumbnailUrl" alt="@post.Title" />
+                                    <img class="img-fluid rounded-3" src="~/Thumbnail/@post.ThumbnailUrl" alt="@post.Title" style="object-fit:cover; height:100%;width:100%"   />
                             
                                 }
                             </div>
                                
                          <div class="col-5 d-flex justify-content-center flex-column">
-                                <h5 class="card-title text-primary">@post.Title</h5>
+                                <h5 style="font-size:1.5rem; font-weight:bold" class="card-title text-primary">@post.Title</h5>
                                 <p style="font-size:.8rem">@post.CreatedDate</p>
                          </div>
                             <div class="col-5 text-right d-flex justify-content-center flex-column">
                                 <h5 style="font-size:1rem" class="card-title">@post.AuthorName</h5>
-                                <p>
-                                    <a  class="btn btn-primary rounded-3" asp-action="Edit" asp-controller="Post" asp-area="Admin" asp-route-id="@post.Id">Edit</a>
+                                <div class="d-flex justify-content-end align-items-center ">
+                                    <a  class="btn btn-primary rounded-3 m-2 " asp-action="Edit" asp-controller="Post" asp-area="Admin" asp-route-id="@post.Id">Edit</a>
                                     <form asp-action="Delete" asp-controller="Post" asp-area="Admin" method="post" onsubmit="return confirm('Do You want to delete this post?')" asp-route-id="@post.Id">
                                         <button type="submit" class="btn btn-danger rounded-3">Delete</button>
                                     </form>
                                    
-                                </p>
+                                </div>
                             </div>
                      </div>
                     </div>
