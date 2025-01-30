@@ -55,7 +55,7 @@ namespace BlogWebApp.Areas.Admin.Controllers
                 page.Title = vm.Title;
                page.ShortDescription = vm.ShortDescription;
             page.Description = vm.Description;
-            if(vm.ThumbnailUrl != null)
+            if(vm.Thumbnail != null)
             {
                 page.ThumbnailUrl = UploadImage(vm.Thumbnail);
             }
@@ -96,7 +96,7 @@ namespace BlogWebApp.Areas.Admin.Controllers
             page.Title = vm.Title;
             page.ShortDescription = vm.ShortDescription;
             page.Description = vm.Description;
-            if (vm.ThumbnailUrl != null)
+            if (vm.Thumbnail != null)
             {
                 page.ThumbnailUrl = UploadImage(vm.Thumbnail);
             }
@@ -138,7 +138,7 @@ namespace BlogWebApp.Areas.Admin.Controllers
             page.Title = vm.Title;
             page.ShortDescription = vm.ShortDescription;
             page.Description = vm.Description;
-            if (vm.ThumbnailUrl != null)
+            if (vm.Thumbnail != null)
             {
                 page.ThumbnailUrl = UploadImage(vm.Thumbnail);
             }
