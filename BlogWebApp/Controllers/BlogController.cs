@@ -15,7 +15,7 @@ namespace BlogWebApp.Controllers
             _context = context; 
             _notification = notyfyservice;
         }
-        [HttpGet]
+        [HttpGet("[controller]/{slug}")]
         public async Task<IActionResult> Post(string slug)
         {
             if (string.IsNullOrEmpty(slug))

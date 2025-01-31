@@ -56,7 +56,7 @@ namespace BlogWebApp.Areas.Admin.Controllers
                 AuthorName = x.ApplicationUser!.FirstName + " " + x.ApplicationUser.LastName
             }).ToList();
 
-            return View(listOfPostVm.ToPagedList(pageNumber,pageSize));
+            return View(listOfPostVm.OrderByDescending(x=>x.CreatedDate).ToPagedList(pageNumber,pageSize));
         }
 
         [HttpGet]

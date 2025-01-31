@@ -33,7 +33,7 @@ namespace BlogWebApp.Controllers
             int pageNumber = page ?? 1;
             vm.Posts =  _context.Posts
                                     .Include(x => x.ApplicationUser)
-                                    .OrderBy(x => x.CreatedDate) // Ensuring the query is ordered
+                                    .OrderByDescending(x => x.CreatedDate) // Ensuring the query is ordered
                                     .ToPagedList(pageNumber, pageSize);
 
             return View(vm);
