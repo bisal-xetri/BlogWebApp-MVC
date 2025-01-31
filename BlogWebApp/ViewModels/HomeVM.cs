@@ -1,4 +1,7 @@
 ﻿using BlogWebApp.Models;
+using X.PagedList;
+
+
 
 namespace BlogWebApp.ViewModels
 {
@@ -8,7 +11,7 @@ namespace BlogWebApp.ViewModels
         public string? ShortDescription { get; set; }
         public string? ShortName { get; set; }
         public string? ThumbnailUrl { get; set; }
-        public List<Post>? Posts { get; set; }
+        public IPagedList<Post>? Posts { get; set; }
 
     }
 }

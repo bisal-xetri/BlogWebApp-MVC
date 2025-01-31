@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList.Extensions;
 
 namespace BlogWebApp.Areas.Admin.Controllers
 {
@@ -28,7 +29,7 @@ namespace BlogWebApp.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
             var listOfPosts = new List<Post>();
             var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
@@ -44,7 +45,8 @@ namespace BlogWebApp.Areas.Admin.Controllers
                                                   .Where(x => x.ApplicationUser!.Id == loggedInUser.Id)
                                                   .ToListAsync();
             }
-
+            int pageSize = 4;
+            int pageNumber = (page ?? 1);
             var listOfPostVm = listOfPosts.Select(x => new PostVM()
             {
                 Id = x.Id,
@@ -54,7 +56,7 @@ namespace BlogWebApp.Areas.Admin.Controllers
                 AuthorName = x.ApplicationUser!.FirstName + " " + x.ApplicationUser.LastName
             }).ToList();
 
-            return View(listOfPostVm);
+            return View(listOfPostVm.ToPagedList(pageNumber,pageSize));
         }
 
         [HttpGet]
